@@ -1,0 +1,28 @@
+{
+  "name": "promise-utility",
+  "version": "1.0.0",
+  "description": "Set of useful functions for dealing with promises",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --recursive ./tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eenewbsauce/promises.git"
+  },
+  "keywords": [
+    "promises",
+    "es6",
+    "utility"
+  ],
+  "author": "eenewbsauce",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eenewbsauce/promises/issues"
+  },
+  "homepage": "https://github.com/eenewbsauce/promises#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3"
+  }
+}

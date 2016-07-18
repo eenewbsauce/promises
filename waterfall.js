@@ -21,8 +21,7 @@ let p3 = new Promise((resolve, reject) => {
 
 let promiseArr = [p1, p2, p3];
 
-function waterfall(promises) {
-
+module.exports = function waterfall(promises) {
 	return new Promise((resolve, reject) => {
 		let pIndex = 0;
 		let resolvedPromises = 0;
@@ -64,9 +63,9 @@ setTimeout(() => {
 	console.log('priority 3')
 }, 301);
 
-waterfall(promiseArr).then(result => {
-	console.log(result);
-}).catch(err => {
-	console.log(err);
-});
+// waterfall(promiseArr).then(result => {
+// 	console.log(result);
+// }).catch(err => {
+// 	console.log(err);
+// });
 

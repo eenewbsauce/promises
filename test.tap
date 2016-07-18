@@ -1,0 +1,8 @@
+1..1
+priority 1
+not ok 1 waterfall should return a promise
+  AssertionError: expected {} to be an object
+      at Context.<anonymous> (tests/waterfall-spec.js:10:26)
+# tests 1
+# pass 0
+# fail 1
