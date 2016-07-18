@@ -3,15 +3,18 @@ module.exports = function waterfall(promises) {
 		let pIndex = 0;
 		let resolvedPromises = 0;
 		let result = 0;
+		let results = [];
 		let interval;
 
 		function waterfallInside() {	
 			if (pIndex < promises.length) {
 				promises[pIndex].then(res => {
+					results.push(res);
 					++resolvedPromises;
 					result += res;	
 
 					if (resolvedPromises === promises.length) {
+						console.log(results);
 						clearInterval(interval);
 						resolve(result);
 					}				
