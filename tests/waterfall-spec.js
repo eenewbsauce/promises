@@ -13,10 +13,12 @@ describe('waterfall', function() {
 		expect(wfOutput.then).to.be.a('function');
 	}); 
 
-	it ('should return the sum of all resolves', (done) => {
-		waterfall(getPromises()).then(sum => {
-			expect(sum).to.equal(6);
+	it ('should return the last promise value', (done) => {
+		waterfall(getPromises()).then(res => {
+			expect(res).to.equal(3);
 			done();
+		}).catch(err => {
+			done(err);
 		});
 	});
 
@@ -38,11 +40,18 @@ describe('waterfall', function() {
 			done();
 		});		
 	});
+	
+	it('should pipe the previous result to the current then()', (done) => {
+		let promises = getPromises();
+		promises[2] = generatePromiseAndCheckForPreviousResult.bind(done);
+		
+		waterfall(promises);
+	});
 });
 
 function getPromises() {
-	return [{res: 1, to: 100}, {res: 2,  to: 50}, {res: 3, to: 150}].map(item => {
-		return generatePromise(item.res, item.to);
+	return [{res: 1, to: 100}, {res: 99,  to: 50}, {res: 3, to: 150}].map(item => {
+		return generatePromise.bind(null, item.res, item.to);
 	});
 }
 
@@ -51,5 +60,16 @@ function generatePromise(resolveValue = 1, timeout = 100) {
 		setTimeout(() => {
 			resolve(resolveValue)
 		}, timeout);
+	});
+}
+
+function generatePromiseAndCheckForPreviousResult(resolveValue = 1, timeout = 100) {
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve(resolveValue)
+		}, timeout);
+	}).then(res => {
+		expect(res).to.equal(99);
+		this();
 	});
 }
