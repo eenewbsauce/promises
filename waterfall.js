@@ -1,71 +1,41 @@
-let p1 = new Promise((resolve, reject) => {
-	setTimeout(() => {
-		console.log('p1 resolved');
-		resolve(1);
-	}, 300);
-});
-
-let p2 = new Promise((resolve, reject) => {
-	setTimeout(() => {
-		console.log('p2 resolved');
-		resolve(2);
-	}, 600);
-});
-
-let p3 = new Promise((resolve, reject) => {
-	setTimeout(() => {
-		console.log('p3 resolved');
-		resolve(3);
-	}, 900);
-});
-
-let promiseArr = [p1, p2, p3];
-
-module.exports = function waterfall(promises) {
-	return new Promise((resolve, reject) => {
+function waterfall(promises) {
+	return new Promise((outerResolve, reject) => {
 		let pIndex = 0;
 		let resolvedPromises = 0;
+		let pendingPromises = 0;
 		let result = 0;
-		let interval;
+		let results = [];
 
-		function waterfallInside() {	
-			if (pIndex < promises.length) {
-				promises[pIndex].then(res => {
-					++resolvedPromises;
-					result += res;	
-
-					if (resolvedPromises === promises.length) {
-						clearInterval(interval);
-						resolve(result);
-					}				
-				});
-			}				
-			
-			++pIndex;	
+		function handlePromise(pIndex, pRes) {
+			return promises[pIndex].call(null, pRes).then(res => {		
+				pIndex++;
+						
+				if (pIndex === promises.length) {
+					outerResolve(res);
+				} else {
+					handlePromise(pIndex, res);		
+				}			
+				
+				return res;				
+			});
 		}
-
-		interval = setInterval(
-			waterfallInside
-		, 0);
+		
+		return handlePromise(pIndex);
 	});
 }
 
-setTimeout(() => {
-	console.log('priority 1')
-}, 0);
+// let promises = [generatePromise.bind(null, 1, 50), generatePromise.bind(null, 2, 55), generatePromise.bind(null, 3, 60)];
 
-setTimeout(() => {
-	console.log('priority 2')
-}, 298);
+// function generatePromise(resolveValue = 1, timeout = 100) {
+// 	return new Promise((resolve, reject) => {
+// 		setTimeout(() => {
+// 			resolve(resolveValue);
+// 		}, timeout);
+// 	});
+// }
 
-
-setTimeout(() => {
-	console.log('priority 3')
-}, 301);
-
-// waterfall(promiseArr).then(result => {
-// 	console.log(result);
-// }).catch(err => {
-// 	console.log(err);
+// return waterfall(promises).then(result => {
+// 	console.log('final result: ' + result);
 // });
 
+module.exports = waterfall;
