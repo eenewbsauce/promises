@@ -7,7 +7,7 @@ before
 
 describe('waterfall', function() {
 	it ('should return a promise', () => {
-		let wfOutput = waterfall();
+		let wfOutput = waterfall([]);
 
 		expect(wfOutput).to.be.a('Promise');
 		expect(wfOutput.then).to.be.a('function');
@@ -46,6 +46,20 @@ describe('waterfall', function() {
 		promises[2] = generatePromiseAndCheckForPreviousResult.bind(done);
 		
 		waterfall(promises);
+	});
+	
+	it('should handle a shit load of promises', function(done) {
+		this.timeout(3000);
+		let numberOfPromises = 1000;
+		let promises = [];
+		
+		for(let i = 0; i < numberOfPromises; i++) {
+			promises.push(generatePromise.bind(null, i, 2));
+		}
+		
+		waterfall(promises).then(() => {
+			done();
+		});
 	});
 });
 

@@ -1,22 +1,21 @@
 function waterfall(promises) {
+	promises.reverse();
+	
 	return new Promise((outerResolve, reject) => {
-		let pIndex = 0;
+		function handlePromise(pRes) {
+			return promises.pop()(pRes).then(res => {		
 
-		function handlePromise(pIndex, pRes) {
-			return promises[pIndex].call(null, pRes).then(res => {		
-				pIndex++;
-						
-				if (pIndex === promises.length) {
+				if (promises.length === 0) {
 					outerResolve(res);
 				} else {
-					handlePromise(pIndex, res);		
+					handlePromise(res);		
 				}			
 				
 				return res;				
 			});
 		}
 		
-		return handlePromise(pIndex);
+		return handlePromise();
 	});
 }
 
