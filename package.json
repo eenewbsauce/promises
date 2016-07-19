@@ -4,7 +4,6 @@
   "description": "Set of useful functions for dealing with promises",
   "main": "index.js",
   "scripts": {
-    "start": "node waterfall",
     "test": "mocha --recursive ./tests"
   },
   "repository": {

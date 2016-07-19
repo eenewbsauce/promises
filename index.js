@@ -1,3 +1,3 @@
 module.exports = {
-	waterfall: require('./waterfall)
+	waterfall: require('./waterfall')
 }
