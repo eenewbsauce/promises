@@ -3,8 +3,6 @@ var should = chai.should();
 var expect = chai.expect;
 var waterfall = require('../waterfall');
 
-before
-
 describe('waterfall', function() {
 	it ('should return a promise', () => {
 		let wfOutput = waterfall([]);
