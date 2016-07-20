@@ -69,6 +69,12 @@ describe('waterfall', () => {
 			expect(wfOutput).to.be.a('Promise');
 			expect(wfOutput.then).to.be.a('function');
 	});
+	
+	it('should return a rejected promise if called with a zero-length array', (done) => {
+		let wfOutput = waterfall([]);
+		
+		wfOutput.should.be.rejected.notify(done);
+	});
 });
 
 function getPromises() {
