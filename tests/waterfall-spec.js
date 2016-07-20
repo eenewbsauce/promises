@@ -1,9 +1,12 @@
 var chai = require('chai');
+require('chai-as-promised');
 var should = chai.should();
+var chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
 var expect = chai.expect;
 var waterfall = require('../waterfall');
 
-describe('waterfall', function() {
+describe('waterfall', () => {
 	it ('should return a promise', () => {
 		let wfOutput = waterfall([]);
 
@@ -48,7 +51,7 @@ describe('waterfall', function() {
 	
 	it('should handle a shit load of promises', function(done) {
 		this.timeout(3000);
-		let numberOfPromises = 1000;
+		let numberOfPromises = 500;
 		let promises = [];
 		
 		for(let i = 0; i < numberOfPromises; i++) {
@@ -58,6 +61,13 @@ describe('waterfall', function() {
 		waterfall(promises).then(() => {
 			done();
 		});
+	});
+	
+	it('should return a rejected promise if called without parameters', (done) => {
+		let wfOutput = waterfall()
+			wfOutput.should.be.rejected.notify(done);
+			expect(wfOutput).to.be.a('Promise');
+			expect(wfOutput.then).to.be.a('function');
 	});
 });
 
