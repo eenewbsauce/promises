@@ -1,10 +1,11 @@
 function waterfall(promises) {
-	if (typeof promises === "undefined" || promises.constructor !== Array) {
+	if (typeof promises === "undefined" || promises.constructor !== Array || promises.length < 1) {
 		return Promise.reject(new Error('promises parameter must be an array'));
 	}
-	promises.reverse();
 	
 	return new Promise((outerResolve, reject) => {
+		promises.reverse();
+				
 		function handlePromise(pRes) {
 			return promises.pop()(pRes).then(res => {		
 
@@ -15,6 +16,9 @@ function waterfall(promises) {
 				}			
 				
 				return res;				
+			})
+			.catch(err => {
+				reject(err);
 			});
 		}
 		

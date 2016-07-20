@@ -55,7 +55,7 @@ describe('waterfall', () => {
 		let promises = [];
 		
 		for(let i = 0; i < numberOfPromises; i++) {
-			promises.push(generatePromise.bind(null, i, 2));
+			promises.push(generatePromise.bind(null, i, 2, false));
 		}
 		
 		waterfall(promises).then(() => {
@@ -71,22 +71,33 @@ describe('waterfall', () => {
 	});
 	
 	it('should return a rejected promise if called with a zero-length array', (done) => {
-		let wfOutput = waterfall([]);
-		
+		let wfOutput = waterfall([]);		
 		wfOutput.should.be.rejected.notify(done);
+	});
+	
+	it ('should return a rejected promise if any promise in input fails', (done) => {
+		let promises = getPromises();
+		promises[2] = generatePromise.bind(null, 1, 50, true);
+		
+		let wfOutput = waterfall(promises);
+		wfOutput.should.be.rejected.notify(done);		
 	});
 });
 
 function getPromises() {
 	return [{res: 1, to: 100}, {res: 99,  to: 50}, {res: 3, to: 150}].map(item => {
-		return generatePromise.bind(null, item.res, item.to);
+		return generatePromise.bind(null, item.res, item.to, false);
 	});
 }
 
-function generatePromise(resolveValue = 1, timeout = 100) {
+function generatePromise(resolveValue = 1, timeout = 100, isRejected = false) {
 	return new Promise((resolve, reject) => {
 		setTimeout(() => {
-			resolve(resolveValue)
+			if (isRejected) {
+				reject(new Error('Forced reject'));
+			} else {
+				resolve(resolveValue);								
+			}
 		}, timeout);
 	});
 }
