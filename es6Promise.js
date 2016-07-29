@@ -11,8 +11,6 @@ function Es6Promise(cb) {
     rejectObj.cb(err);
   }
   
-  var _catchCb;
-  
   cb = cb.bind(this, _thenCb, _catchCb);
   
   var resolveObj = {
