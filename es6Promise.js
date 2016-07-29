@@ -44,16 +44,11 @@ function Es6Promise(cb) {
     }
   }  
   
-  function finallyFn(finallyCb) {
-    
-  }
-  
   cb();
   
   return {
     then: thenFn,
-    catch: catchFn,
-    finally: finallyFn
+    catch: catchFn
   };
 }
 
