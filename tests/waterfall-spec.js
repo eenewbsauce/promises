@@ -14,7 +14,7 @@ describe('waterfall', () => {
 		expect(wfOutput.then).to.be.a('function');
 	}); 
 
-	it ('should return the last promise value', (done) => {
+	it('should return the last promise value', (done) => {
 		waterfall(getPromises()).then(res => {
 			expect(res).to.equal(3);
 			done();
