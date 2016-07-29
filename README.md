@@ -1,6 +1,9 @@
 # Promises
 
-So far I've implemented a waterfall promise handler
+So far I've implemented: 
+
+1. ES6 Style promise constructor (thanks Yuri)
+2. a waterfall promise handler
 
 # Testing
 
