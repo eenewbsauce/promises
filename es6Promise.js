@@ -25,12 +25,14 @@ function Es6Promise(cb) {
     err: {}
   }
     
-  function thenFn(thenCb) {
+  function thenFn(thenCb, catchCb) {
     if (resolveObj.isResolved) {
       resolveObj.cb(resolveObj.data);
-    } 
-    else {
-      resolveObj.cb = thenCb;  
+    } else if (rejectObj.isRejected) {
+      rejectObj.cb(rejectObj.err);      
+    } else {
+      resolveObj.cb = thenCb; 
+      rejectObj.cb = catchCb; 
       return this;          
     }
   } 

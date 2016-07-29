@@ -10,13 +10,13 @@ describe('promise', () => {
   it('should have have a then method and resolve() should route to it', (done) => {
     var p = new P((resolve, reject) => {
       setTimeout(() => {
-        resolve("ryan");
+        resolve("resolved");
       }, 5);  
     });
 
     p
       .then(res => {
-        expect(res).to.equal("ryan");
+        expect(res).to.equal("resolved");
         done();
       })
       .catch(err => {
@@ -26,7 +26,7 @@ describe('promise', () => {
   it('should have have a catch method and reject() should route to it', (done) => {
     var p = new P((resolve, reject) => {
       setTimeout(() => {
-        reject("ryan");
+        reject("rejected");
       }, 5);  
     });
 
@@ -34,9 +34,39 @@ describe('promise', () => {
       .then(res => {
       })
       .catch(err => {
-        expect(err).to.equal("ryan");
+        expect(err).to.equal("rejected");
         done();
       });
+  });  
+  
+  it('should have have a then method that takes resolve/reject callbacks and routes correctly', (done) => {
+    var pRes = new P((resolve, reject) => {
+      setTimeout(() => {
+        resolve("resolved");
+      }, 5);  
+    });
+    
+    var pRej = new P((resolve, reject) => {
+      setTimeout(() => {
+        reject("rejected");
+      }, 5);  
+    });
+
+    pRes
+      .then(res => {
+        expect(res).to.equal("resolved");
+      }, err => {
+      }) 
+      
+    pRej
+      .then(res => {
+      }, err => {
+        expect(err).to.equal("rejected");
+      }) 
+      
+    setTimeout(() => {
+      done();
+    }, 10)
   });  
 });
 
