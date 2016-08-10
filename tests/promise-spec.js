@@ -96,5 +96,33 @@ describe('promise', () => {
       done();
     }, 8)
   }); 
+  
+  it('should allow multiple catch cbs and route properly', done => {
+    let resolvedCount = 0;
+    var p = new P((resolve, reject) => {
+      setTimeout(() => {
+        reject(1);
+      }, 5);
+    });
+    
+    p
+      .catch(res => {
+        resolvedCount += res;
+      })
+      .catch(res => {
+        resolvedCount += res;
+      });
+      
+    p
+      .then(() => {})
+      .catch(res => {
+        resolvedCount += res;
+      })
+      
+    setTimeout(() => {
+      expect(resolvedCount).to.equal(3);
+      done();
+    }, 8)
+  }); 
 });
 
