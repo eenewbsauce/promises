@@ -2,49 +2,59 @@ function Es6Promise(cb) {
   var _thenCb = function(res) {
     resolveObj.isResolved = true;
     resolveObj.data = res;
-    resolveObj.cb(res);
+    thenFn();
   }
   
   var _catchCb = function(err) {
     rejectObj.isRejected = true;
     rejectObj.err = err;
-    rejectObj.cb(err);
+    catchFn();
   }
-  
-  cb = cb.bind(this, _thenCb, _catchCb);
   
   var resolveObj = {
     isResolved: false,
-    data: {}
+    data: {},
+    cbs: []
   };
   
   var rejectObj = {
     isRejected: false,
-    err: {}
+    err: {},
+    cbs: []
   }
     
   function thenFn(thenCb, catchCb) {
     if (resolveObj.isResolved) {
-      resolveObj.cb(resolveObj.data);
+      resolveObj.cbs.map(function(cb){
+        cb(resolveObj.data)
+      });
     } else if (rejectObj.isRejected) {
-      rejectObj.cb(rejectObj.err);      
+      rejectObj.cbs.map(function(cb){
+        cb(rejectObj.err);
+      });      
     } else {
-      resolveObj.cb = thenCb; 
-      rejectObj.cb = catchCb; 
+        if (thenCb) {
+          resolveObj.cbs.push(thenCb);                
+        }
+        if (catchCb) {
+          rejectObj.cbs.push(catchCb);                    
+        }
       return this;          
     }
   } 
   
   function catchFn(catchCb) {
     if (rejectObj.isRejected) {
-      rejectObj.cb(rejectObj.err);
+      rejectObj.cbs.map(function(cb){
+        cb(rejectObj.err)
+      });
     } else {
-      rejectObj.cb = catchCb;  
+      rejectObj.cbs.push(catchCb);  
       return this;          
     }
   }  
   
-  cb();
+  cb.bind(this, _thenCb, _catchCb)();
   
   return {
     then: thenFn,

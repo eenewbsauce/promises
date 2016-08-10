@@ -66,7 +66,7 @@ describe('promise', () => {
       
     setTimeout(() => {
       done();
-    }, 10)
+    }, 15)
   });  
 });
 
